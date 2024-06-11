@@ -15,9 +15,16 @@ class ProductWidgets extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Card(
+    return  Card(
 child: Column(children: [
-  
+
+Image(image: NetworkImage(productImage),
+fit: BoxFit.cover,
+height: 150,),
+const Text(""),
+
+
+
 ],),
 
 
