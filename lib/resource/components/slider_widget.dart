@@ -11,9 +11,9 @@ class SliderWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return CarouselSlider(
       options: CarouselOptions(
-      height: 200,
+      height: 180,
       aspectRatio: 16/9,
-      viewportFraction: 0.8,
+      viewportFraction: 1,
       initialPage: 0,
       enableInfiniteScroll: true,
       reverse: false,
@@ -29,12 +29,17 @@ class SliderWidget extends StatelessWidget {
         return Builder(
           builder: (BuildContext context) {
             return Container(
+              
                 width: MediaQuery.of(context).size.width,
                 margin: const EdgeInsets.symmetric(horizontal: 5.0),
-                decoration: const BoxDecoration(color: Colors.amber),
-                child: Image(image: NetworkImage("${i.image}") , errorBuilder: ((context, error, stackTrace) {
-                  return const Icon( Icons.error);
-                }),   ));
+                decoration: const BoxDecoration(color: Colors.amber,borderRadius: BorderRadius.all(Radius.circular(40)))
+                ,
+                child: ClipRRect(
+                  borderRadius: const BorderRadius.all(Radius.circular(30)),
+                  child: Image(fit: BoxFit.cover,image: NetworkImage("${i.image}") , errorBuilder: ((context, error, stackTrace) {
+                    return const Icon( Icons.error);
+                  }),   ),
+                ));
           },
         );
       }).toList(),

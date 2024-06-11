@@ -1,13 +1,17 @@
 import 'dart:convert';
 
+import 'package:ecommerce/model/discount_offer_modal.dart';
 import 'package:ecommerce/model/slider_model.dart';
 import 'package:ecommerce/resource/components/skelton/product_loading_skelton.dart';
 import 'package:ecommerce/resource/components/skelton/slider_loading_skelton.dart';
 import 'package:ecommerce/resource/components/slider_widget.dart';
 import 'package:ecommerce/resource/components/textformfield@widgets.dart';
+import 'package:ecommerce/resource/components/title_widgets.dart';
 import 'package:ecommerce/resource/services/local_storage/session_manage.dart';
 import 'package:ecommerce/resource/services/local_storage/user_info.dart';
 import 'package:ecommerce/view_modal/category_view_modal.dart';
+import 'package:ecommerce/view_modal/discount_offer_view_modal.dart';
+import 'package:ecommerce/view_modal/popular_view_modal.dart';
 import 'package:ecommerce/view_modal/slider_view_modal.dart';
 import 'package:ecommerce/views/navbar/orders.dart';
 import 'package:ecommerce/views/navbar/profile.dart';
@@ -31,6 +35,9 @@ class _HomePageState extends State<HomePage> {
 
     Provider.of<CategoryViewModal>(context, listen: false).fetchCategoryList();
     Provider.of<SliderViewModal>(context, listen: false).fetchSliderApi();
+    Provider.of<DiscountOfferViewModal>(context, listen: false)
+        .fetchDiscountApi();
+        Provider.of<PopularProductViewModal>(context, listen: false).fetchPopularApi();
   }
 
   String profileImge = '';
@@ -86,84 +93,219 @@ class _HomePageState extends State<HomePage> {
           child: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 15),
-          child: Column(
-            children: [
-              const SizedBox(
-                height: 15,
-              ),
-              SizedBox(
-                  height: 45,
-                  child: TextFormFieldWidgets(
-                      controller: searchController,
-                      hintText: "Search",
-                      icon: Icons.search,
-                      keyboardType: TextInputType.name,
-                      obscureText: false)),
-
-              const SizedBox(
-                height: 15,
-              ),
-
-              const Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    "Special Offers",
-                    style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500),
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                const SizedBox(
+                  height: 15,
+                ),
+                SizedBox(
+                    height: 45,
+                    child: TextFormFieldWidgets(
+                        controller: searchController,
+                        hintText: "Search",
+                        icon: Icons.search,
+                        keyboardType: TextInputType.name,
+                        obscureText: false)),
+            
+                const SizedBox(
+                  height: 15,
+                ),
+            
+                TitleWidgets(title: "Catogeries", onpress: (){
+                  
+                }),
+            
+                const SizedBox(
+                  height: 15,
+                ),
+                Consumer<SliderViewModal>(builder: (BuildContext context,
+                    SliderViewModal sliderProvider, Widget? child) {
+                  return sliderProvider.isLoading
+                      ? const SliderLoading()
+                      : SliderWidget(
+                          sliderData: sliderProvider.sliderDate,
+                        );
+                }),
+                const SizedBox(
+                  height: 10,
+                ),
+                // const Row(
+                //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                //   children: [
+                //     Text(
+                //       "Special Offers",
+                //       style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                //     ),
+                //     Text(
+                //       "See All",
+                //       style: TextStyle(
+                //           fontSize: 16,
+                //           fontWeight: FontWeight.w500,
+                //           color: Colors.green),
+                //     )
+                //   ],
+                // ),
+            
+            TitleWidgets(title: "Special Offers", onpress: (){}),
+            
+                const SizedBox(
+                  height: 10,
+                ),
+            
+                Card(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Consumer<CategoryViewModal>(
+                      builder: (BuildContext context,
+                          CategoryViewModal categoryProvider, Widget? child) {
+                        return GridView.builder(
+                            itemCount: categoryProvider.categoryData.length,
+                            shrinkWrap: true,
+                            gridDelegate:
+                                const SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 4,
+                              crossAxisSpacing: 10.0,
+                              mainAxisSpacing: 10.0,
+                              childAspectRatio: 1,
+                            ),
+                            itemBuilder: (BuildContext context, int index) {
+                              return Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  SizedBox(
+                                    height: 50,
+                                    width: 50,
+                                    child: Image(
+                                        errorBuilder:
+                                            (context, error, stackTrace) {
+                                          return Image.asset('assets/logo.png');
+                                        },
+                                        image: NetworkImage(
+                                          "${categoryProvider.categoryData[index].image}",
+                                        )),
+                                  ),
+                                  Text(
+                                    "${categoryProvider.categoryData[index].name}",
+                                    overflow: TextOverflow.ellipsis,
+                                    style: const TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w500),
+                                    textAlign: TextAlign.center,
+                                  )
+                                ],
+                              );
+                            });
+                      },
+                    ),
                   ),
-                  Text(
-                    "See All",
-                    style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500),
-                  )
-                ],
-              ),
-              const SizedBox(
-                height: 15,
-              ),
-              Consumer<SliderViewModal>(builder: (BuildContext context,
-                  SliderViewModal sliderProvider, Widget? child) {
-                return sliderProvider.isLoading
-                    ? const SliderLoading()
-                    : SliderWidget(
-                        sliderData: sliderProvider.sliderDate,
-                      );
-              }),
-              const SizedBox(
-                height: 10,
-              ),
-              Consumer<CategoryViewModal>(
-                builder: (BuildContext context,
-                    CategoryViewModal categoryProvider, Widget? child) {
-                  return GridView.builder(
-                      itemCount: categoryProvider.categoryData.length,
-                      shrinkWrap: true,
-                      gridDelegate:
-                          const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 4,
-                        crossAxisSpacing: 10.0,
-                        mainAxisSpacing: 10.0,
-                        childAspectRatio: 0.7,
-                      ),
-                      itemBuilder: (BuildContext context, int index) {
-                        return Column(
+                ),
+               
+                // const Row(
+                //   children: [
+                //     Text(
+                //       "Discount Guaranteed!",
+                //       style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                //     ),
+                //     // Icon(
+                //     //   Icons.offline_bolt_rounded,
+                //     //   color: Colors.green,
+                //     // ),
+                //     Spacer(),
+                //     Text(
+                //       "See All",
+                //       style: TextStyle(
+                //           color: Colors.green,
+                //           fontSize: 16,
+                //           fontWeight: FontWeight.w500),
+                //     ),
+                //   ],
+                // ),
+            
+                //  const ProdcutLoading(),
+            
+                Consumer<DiscountOfferViewModal>(
+                  builder: (BuildContext context,
+                      DiscountOfferViewModal discountOfferProvider,
+                      Widget? child) {
+                    return discountOfferProvider.isLoading
+                        ? Column(
                           children: [
-                            Image(
-                                height: 50,
+                             const SizedBox(
+                  height: 10,
+                ),
+            
+            TitleWidgets(title: "Discount Guaranteed!", onpress: (){}),
+            
+                            const ProdcutLoading(),
+                          ],
+                        )
+                        :  discountOfferProvider.discountData.isEmpty?const SizedBox(): Column(
+                          children: [
+                             const SizedBox(
+                  height: 10,
+                ),
+            
+            TitleWidgets(title: "Discount Guaranteed!", onpress: (){}),
+            
+                            SizedBox(
 
-                                errorBuilder: (context, error, stackTrace) {
-                                  return Image.asset('assets/logo.png');
-                                },
-                                image: NetworkImage(
-                                  "${categoryProvider.categoryData[index].image}",
-                                )),
-                            Text("${categoryProvider.categoryData[index].name}")
+                              height: 200,
+
+
+                              child: ListView.builder(
+                                scrollDirection: Axis.horizontal,
+                                shrinkWrap: true,
+                                  itemCount: discountOfferProvider.discountData.length,
+                                  itemBuilder: (context, index) {
+                                    return Text("${discountOfferProvider.discountData[index].name}");
+                                  }),
+                            ),
                           ],
                         );
-                      });
-                },
-              ),
-              // const ProdcutLoading(),
-            ],
+                  },
+                ),
+                            Consumer<PopularProductViewModal>(
+                  builder: (BuildContext context,
+                      PopularProductViewModal popularProductProvider,
+                      Widget? child) {
+                    return popularProductProvider.isLoading
+                        ? Column(
+                          children: [
+                             const SizedBox(
+                  height: 10,
+                ),
+            
+            TitleWidgets(title: "Popular Product", onpress: (){}),
+            
+                            const ProdcutLoading(),
+                          ],
+                        )
+                        :  popularProductProvider.popularData.isEmpty?const SizedBox(): Column(
+                          children: [
+                             const SizedBox(
+                  height: 10,
+                ),
+            
+            TitleWidgets(title: "Popular Product", onpress: (){}),
+            
+                            SizedBox(
+                              height: 200,
+                              child: ListView.builder(
+                                scrollDirection: Axis.horizontal,
+                                physics: const ScrollPhysics(),
+                                shrinkWrap: true,
+                                  itemCount: popularProductProvider.popularData.length,
+                                  itemBuilder: (context, index) {
+                                    return Text("${popularProductProvider.popularData[index].productName}");
+                                  }),
+                            ),
+                          ],
+                        );
+                  },
+                )
+              ],
+            ),
           ),
         ),
       )),

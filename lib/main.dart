@@ -1,4 +1,7 @@
+import 'package:ecommerce/model/discount_offer_modal.dart';
 import 'package:ecommerce/view_modal/category_view_modal.dart';
+import 'package:ecommerce/view_modal/discount_offer_view_modal.dart';
+import 'package:ecommerce/view_modal/popular_view_modal.dart';
 import 'package:ecommerce/view_modal/slider_view_modal.dart';
 import 'package:ecommerce/views/splash_screen.dart';
 
@@ -18,7 +21,9 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => SliderViewModal()),
-        ChangeNotifierProvider(create: (_) => CategoryViewModal())
+        ChangeNotifierProvider(create: (_) => CategoryViewModal()),
+         ChangeNotifierProvider(create: (_) => DiscountOfferViewModal()),
+         ChangeNotifierProvider(create: (_) => PopularProductViewModal()),
       ],
       child: MaterialApp(
         title: 'Flutter Demo',

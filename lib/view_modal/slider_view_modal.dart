@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:ecommerce/model/slider_model.dart';
 import 'package:ecommerce/resource/utils.dart';
 import 'package:flutter/material.dart';
