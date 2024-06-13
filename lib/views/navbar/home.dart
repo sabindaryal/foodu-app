@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:ecommerce/model/discount_offer_modal.dart';
 import 'package:ecommerce/model/slider_model.dart';
+import 'package:ecommerce/resource/components/product_widgets.dart';
 import 'package:ecommerce/resource/components/skelton/product_loading_skelton.dart';
 import 'package:ecommerce/resource/components/skelton/slider_loading_skelton.dart';
 import 'package:ecommerce/resource/components/slider_widget.dart';
@@ -13,6 +14,7 @@ import 'package:ecommerce/view_modal/category_view_modal.dart';
 import 'package:ecommerce/view_modal/discount_offer_view_modal.dart';
 import 'package:ecommerce/view_modal/popular_view_modal.dart';
 import 'package:ecommerce/view_modal/slider_view_modal.dart';
+import 'package:ecommerce/view_modal/top_rated_product_view_modal.dart';
 import 'package:ecommerce/views/navbar/orders.dart';
 import 'package:ecommerce/views/navbar/profile.dart';
 import 'package:ecommerce/views/navbar/shop.dart';
@@ -38,6 +40,7 @@ class _HomePageState extends State<HomePage> {
     Provider.of<DiscountOfferViewModal>(context, listen: false)
         .fetchDiscountApi();
         Provider.of<PopularProductViewModal>(context, listen: false).fetchPopularApi();
+        Provider.of<TopRatedProductViewModel>(context, listen: false).fetchTopRatedApi();
   }
 
   String profileImge = '';
@@ -273,7 +276,7 @@ class _HomePageState extends State<HomePage> {
                         ? Column(
                           children: [
                              const SizedBox(
-                  height: 10,
+                  height: 20,
                 ),
             
             TitleWidgets(title: "Popular Product", onpress: (){}),
@@ -290,14 +293,55 @@ class _HomePageState extends State<HomePage> {
             TitleWidgets(title: "Popular Product", onpress: (){}),
             
                             SizedBox(
-                              height: 200,
+                              height: 300,
                               child: ListView.builder(
                                 scrollDirection: Axis.horizontal,
                                 physics: const ScrollPhysics(),
                                 shrinkWrap: true,
                                   itemCount: popularProductProvider.popularData.length,
                                   itemBuilder: (context, index) {
-                                    return Text("${popularProductProvider.popularData[index].productName}");
+                                    // return Text("${popularProductProvider.popularData[index].productName}");
+                                    return ProductWidgets(productPrice:"${popularProductProvider.popularData[index].price}" , productName: "${popularProductProvider.popularData[index].productName}", productImage:"${popularProductProvider.popularData[index].image}", addToCart: (){});
+                                  }),
+                            ),
+                          ],
+                        );
+                  },
+                ),
+                                Consumer<TopRatedProductViewModel>(
+                  builder: (BuildContext context,
+                      TopRatedProductViewModel topRatedProductProvider,
+                      Widget? child) {
+                    return topRatedProductProvider.isLoading
+                        ? Column(
+                          children: [
+                             const SizedBox(
+                  height: 20,
+                ),
+            
+            TitleWidgets(title: "Top Rated Product", onpress: (){}),
+            
+                            const ProdcutLoading(),
+                          ],
+                        )
+                        :  topRatedProductProvider.topRatedData.isEmpty?const SizedBox(): Column(
+                          children: [
+                             const SizedBox(
+                  height: 10,
+                ),
+            
+            TitleWidgets(title: "Top Rated Product", onpress: (){}),
+            
+                            SizedBox(
+                              height: 300,
+                              child: ListView.builder(
+                                scrollDirection: Axis.horizontal,
+                                physics: const ScrollPhysics(),
+                                shrinkWrap: true,
+                                  itemCount: topRatedProductProvider.topRatedData.length,
+                                  itemBuilder: (context, index) {
+                                    // return Text("${popularProductProvider.popularData[index].productName}");
+                                    return ProductWidgets(productPrice:"${topRatedProductProvider.topRatedData[index].price}" , productName: "${topRatedProductProvider.topRatedData[index].productName}", productImage:"${topRatedProductProvider.topRatedData[index].image}", addToCart: (){});
                                   }),
                             ),
                           ],

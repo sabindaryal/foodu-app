@@ -3,6 +3,7 @@ import 'package:ecommerce/view_modal/category_view_modal.dart';
 import 'package:ecommerce/view_modal/discount_offer_view_modal.dart';
 import 'package:ecommerce/view_modal/popular_view_modal.dart';
 import 'package:ecommerce/view_modal/slider_view_modal.dart';
+import 'package:ecommerce/view_modal/top_rated_product_view_modal.dart';
 import 'package:ecommerce/views/splash_screen.dart';
 
 import 'package:flutter/material.dart';
@@ -24,6 +25,8 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => CategoryViewModal()),
          ChangeNotifierProvider(create: (_) => DiscountOfferViewModal()),
          ChangeNotifierProvider(create: (_) => PopularProductViewModal()),
+         ChangeNotifierProvider(create: (_) => TopRatedProductViewModel()),
+
       ],
       child: MaterialApp(
         title: 'Flutter Demo',
