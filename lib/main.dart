@@ -1,4 +1,5 @@
 import 'package:ecommerce/model/discount_offer_modal.dart';
+import 'package:ecommerce/view_modal/cart_View_modal.dart';
 import 'package:ecommerce/view_modal/category_view_modal.dart';
 import 'package:ecommerce/view_modal/discount_offer_view_modal.dart';
 import 'package:ecommerce/view_modal/popular_view_modal.dart';
@@ -26,6 +27,8 @@ class MyApp extends StatelessWidget {
          ChangeNotifierProvider(create: (_) => DiscountOfferViewModal()),
          ChangeNotifierProvider(create: (_) => PopularProductViewModal()),
          ChangeNotifierProvider(create: (_) => TopRatedProductViewModel()),
+
+         ChangeNotifierProvider(create: (_)=>CartViewModal())
 
       ],
       child: MaterialApp(

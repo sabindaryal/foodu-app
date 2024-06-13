@@ -4,9 +4,7 @@ import 'package:ecommerce/resource/base_url.dart';
 import 'package:ecommerce/resource/utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart 'as http;
-
-
+import "package:http/http.dart"as http;
 class TopRatedProductViewModel with ChangeNotifier {
 
 final List<TopRatedProductmodal> _topRatedData=[];
@@ -44,8 +42,7 @@ notifyListeners();
 }
 }
 catch(error)
-{
-  print(error);
+{  print(error);
 }
 
 
