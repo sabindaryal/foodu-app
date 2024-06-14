@@ -317,6 +317,7 @@ class _HomePageState extends State<HomePage> {
                                                             .price
                                                             .toString()),
                                                         qty: 1,
+                                                        initalPrice:int.tryParse( value.price.toString()),
                                                         imgUrl: value.image,
                                                         storeId: value.storeId,
                                                         variant:

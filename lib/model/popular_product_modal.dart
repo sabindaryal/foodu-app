@@ -16,6 +16,7 @@ class PopularProductModal {
   String? maximumPrice;
   List<ProductVariants>? productVariants;
   String? rating;
+  String? initlPrice;
 
   PopularProductModal(
       {this.type,
@@ -33,7 +34,7 @@ class PopularProductModal {
       this.minimumPrice,
       this.maximumPrice,
       this.productVariants,
-      this.rating});
+      this.rating ,this.initlPrice });
 
   PopularProductModal.fromJson(Map<String, dynamic> json) {
     type = json['type'];
@@ -50,6 +51,8 @@ class PopularProductModal {
     totalVariants = json['total_variants'];
     minimumPrice = json['minimum_price'];
     maximumPrice = json['maximum_price'];
+
+    initlPrice=json['price'];
     if (json['product_variants'] != null) {
       productVariants = <ProductVariants>[];
       json['product_variants'].forEach((v) {
@@ -62,6 +65,7 @@ class PopularProductModal {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['type'] = type;
+    data['price']=initlPrice;
     data['store_id'] = storeId;
     data['product_name'] = productName;
     data['price'] = price;

@@ -7,6 +7,7 @@ class SelectedCartItemsModal {
   String? imgUrl;
   int? storeId;
   bool? variant;
+  int? initalPrice;
  
   SelectedCartItemsModal(
       {this.id,
@@ -16,6 +17,7 @@ class SelectedCartItemsModal {
       this.imgUrl,
       this.storeId,
       this.variant,
+      this.initalPrice,
      });
 
   SelectedCartItemsModal.fromJson(Map<String, dynamic> json) {
@@ -26,6 +28,7 @@ class SelectedCartItemsModal {
     imgUrl = json['imgUrl'];
     storeId = json['storeId'];
     variant = json['variant'];
+    initalPrice=json['initalPrice'];
    
   }
 
@@ -38,6 +41,7 @@ class SelectedCartItemsModal {
     data['imgUrl'] = imgUrl;
     data['storeId'] = storeId;
     data['variant'] = variant;
+    data['initalPrice']=initalPrice;
   
     return data;
   }
