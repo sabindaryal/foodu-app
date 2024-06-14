@@ -14,11 +14,11 @@ class CartViewModal with ChangeNotifier {
         _selectedProductInCart.indexWhere((element) => element.id == data.id);
 
     if (indexValue != -1) {
-      _selectedProductInCart[indexValue].qty =  _selectedProductInCart[indexValue].qty! + 1;
-       _selectedProductInCart[indexValue].price =
+      _selectedProductInCart[indexValue].qty =
+          _selectedProductInCart[indexValue].qty! + 1;
+      _selectedProductInCart[indexValue].price =
           _selectedProductInCart[indexValue].initalPrice!.toInt() *
               _selectedProductInCart[indexValue].qty!.toInt();
-
     } else {
       _selectedProductInCart.add(data);
     }
