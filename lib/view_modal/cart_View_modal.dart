@@ -1,7 +1,11 @@
+import 'dart:convert';
+
 import 'package:ecommerce/model/cart_product_modal.dart';
+import 'package:ecommerce/resource/base_url.dart';
 import 'package:ecommerce/resource/utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
 class CartViewModal with ChangeNotifier {
   final List<SelectedCartItemsModal> _selectedProductInCart = [];
@@ -17,19 +21,21 @@ class CartViewModal with ChangeNotifier {
       _selectedProductInCart[indexValue].qty =
           _selectedProductInCart[indexValue].qty! + 1;
       _selectedProductInCart[indexValue].price =
-          _selectedProductInCart[indexValue].initalPrice!.toInt() *
-              _selectedProductInCart[indexValue].qty!.toInt();
+          _selectedProductInCart[indexValue].initalPrice!.toDouble() *
+              _selectedProductInCart[indexValue].qty!.toDouble();
     } else {
       _selectedProductInCart.add(data);
     }
 
     notifyListeners();
 
+    calculateNetAmountPrice();
     ToastMessage.toastMsg("Add In cart", Colors.green);
   }
 
   void removeItem(int id) {
     _selectedProductInCart.removeWhere((item) => item.id == id);
+    calculateNetAmountPrice();
     notifyListeners();
   }
 
@@ -42,11 +48,13 @@ class CartViewModal with ChangeNotifier {
           _selectedProductInCart[indexValue].qty! + 1;
 
       _selectedProductInCart[indexValue].price =
-          _selectedProductInCart[indexValue].initalPrice!.toInt() *
-              _selectedProductInCart[indexValue].qty!.toInt();
+          _selectedProductInCart[indexValue].initalPrice!.toDouble() *
+              _selectedProductInCart[indexValue].qty!.toDouble();
 
       notifyListeners();
     }
+
+    calculateNetAmountPrice();
   }
 
   void decreaseQuantity(int id) {
@@ -57,21 +65,40 @@ class CartViewModal with ChangeNotifier {
           _selectedProductInCart[index].qty! - 1;
 
       _selectedProductInCart[index].price =
-          _selectedProductInCart[index].price!.toInt() -
-              _selectedProductInCart[index].initalPrice!.toInt();
+          _selectedProductInCart[index].price!.toDouble() -
+              _selectedProductInCart[index].initalPrice!.toDouble();
     } else {
       _selectedProductInCart.removeAt(index);
     }
-
+    calculateNetAmountPrice();
     notifyListeners();
   }
 
-  int get totalPrice {
+  double get totalPrice {
     return _selectedProductInCart.fold(
-        0, (sum, item) => sum + (item.price ?? 0) * (item.qty ?? 1));
+        0, (sum, item) => sum + (item.price ?? 0));
   }
 
-  int get itemCount {
-    return _selectedProductInCart.length;
+  final double _discount = 20;
+  double get discount => _discount;
+
+  Future<void> getDiscount() async {
+    try {
+      final response = await http.get(Uri.parse(ApiUrls.descointUrlGet));
+
+      if (response.statusCode == 200) {
+        // _discount = jsonDecode(response.body)['discount'] ?? 0;
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  double netAmount = 0.0;
+
+  void calculateNetAmountPrice() {
+    double discountAmount = totalPrice * (_discount / 100);
+
+    netAmount = totalPrice - discountAmount;
   }
 }

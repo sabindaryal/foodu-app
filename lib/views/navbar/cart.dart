@@ -1,3 +1,5 @@
+import 'package:ecommerce/resource/components/button@widgets.dart';
+import 'package:ecommerce/resource/components/textformfield@widgets.dart';
 import 'package:ecommerce/view_modal/cart_View_modal.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -11,6 +13,7 @@ class CartPage extends StatefulWidget {
 }
 
 class _CartPageState extends State<CartPage> {
+  TextEditingController remarksController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -19,60 +22,75 @@ class _CartPageState extends State<CartPage> {
         centerTitle: true,
         title: const Text("My Cart"),
       ),
-      body: Consumer<CartViewModal>(
-        builder: (BuildContext context, CartViewModal cartProvider, Widget? child) {
-          return cartProvider.selectedProductInCart.isEmpty
-              ? const Center(
-                  child: Text("Empty Cart"),
-                )
-              : Column(
-                  children: [
-                    Expanded(
-                      child: ListView.builder(
-                        itemCount: cartProvider.selectedProductInCart.length,
-                        itemBuilder: (context, index) {
-                          return Card(
-                            child: ListTile(
-                              title: Text("${cartProvider.selectedProductInCart[index].productname}"),
-                              trailing: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  IconButton(
-                                    icon: const Icon(Icons.remove),
-                                    onPressed: () {
-                                      cartProvider.decreaseQuantity(
-                                          int.parse(cartProvider.selectedProductInCart[index].id.toString()));
-                                    },
-                                  ),
-                                  Text(cartProvider.selectedProductInCart[index].qty.toString()),
-                                  IconButton(
-                                    icon: const Icon(Icons.add),
-                                    onPressed: () {
-                                      cartProvider.increase(
-                                          int.parse(cartProvider.selectedProductInCart[index].id.toString()));
-                                    },
-                                  ),
-                                  Text("Price: Rs ${cartProvider.selectedProductInCart[index].price}"),
-                                ],
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Consumer<CartViewModal>(
+          builder:
+              (BuildContext context, CartViewModal cartProvider, Widget? child) {
+            return cartProvider.selectedProductInCart.isEmpty
+                ? const Center(
+                    child: Text("Empty Cart"),
+                  )
+                : Column(
+                    children: [
+                      Expanded(
+                        child: ListView.builder(
+                          itemCount: cartProvider.selectedProductInCart.length,
+                          itemBuilder: (context, index) {
+                            return Card(
+                              child: ListTile(
+                                title: Text(
+                                    "${cartProvider.selectedProductInCart[index].productname}"),
+                                trailing: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    IconButton(
+                                      icon: const Icon(Icons.remove),
+                                      onPressed: () {
+                                        cartProvider.decreaseQuantity(int.parse(
+                                            cartProvider
+                                                .selectedProductInCart[index].id
+                                                .toString()));
+                                      },
+                                    ),
+                                    Text(cartProvider
+                                        .selectedProductInCart[index].qty
+                                        .toString()),
+                                    IconButton(
+                                      icon: const Icon(Icons.add),
+                                      onPressed: () {
+                                        cartProvider.increase(int.parse(
+                                            cartProvider
+                                                .selectedProductInCart[index].id
+                                                .toString()));
+                                      },
+                                    ),
+                                    Text(
+                                        "Price: Rs ${cartProvider.selectedProductInCart[index].price}"),
+                                  ],
+                                ),
                               ),
-                            ),
-                          );
-                        },
+                            );
+                          },
+                        ),
                       ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          // Text("Total Quantity: ${cartProvider.totalQuantity}"),
-                          Text("Total Price: Rs ${cartProvider.totalPrice}"),
-                        ],
-                      ),
-                    ),
-                  ],
-                );
-        },
+                      TextFormFieldWidgets(
+                          controller: remarksController,
+                          hintText: "Remarks",
+                          icon: Icons.dock_rounded,
+                          keyboardType: TextInputType.name,
+                          obscureText: false),
+                      Text("Gross Amount: Rs ${cartProvider.totalPrice}"),
+                      Text("Discount: Rs ${cartProvider.discount}"),
+                      Text("Net Amount: Rs ${cartProvider.netAmount}"),
+
+
+ElevatedButtonWidget(text: 'Continue', onPressed: () {  },)
+
+                    ],
+                  );
+          },
+        ),
       ),
     );
   }

@@ -2,12 +2,12 @@
 class SelectedCartItemsModal {
   int? id;
   String? productname;
-  int? price;
+  double? price;
   int? qty;
   String? imgUrl;
   int? storeId;
   bool? variant;
-  int? initalPrice;
+  double? initalPrice;
  
   SelectedCartItemsModal(
       {this.id,

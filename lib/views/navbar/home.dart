@@ -313,11 +313,11 @@ class _HomePageState extends State<HomePage> {
                                                         id: value.productId,
                                                         productname:
                                                             value.productName,
-                                                        price: int.parse(value
-                                                            .price
-                                                            .toString()),
+                                                        price:  double.tryParse(value
+                                                            .price.toString()) ,
+                                                           
                                                         qty: 1,
-                                                        initalPrice:int.tryParse( value.price.toString()),
+                                                        initalPrice:double.tryParse( value.price.toString()),
                                                         imgUrl: value.image,
                                                         storeId: value.storeId,
                                                         variant:

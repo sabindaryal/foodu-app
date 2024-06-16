@@ -1,10 +1,12 @@
 import 'package:ecommerce/resource/services/local_storage/session_manage.dart';
+import 'package:ecommerce/view_modal/cart_View_modal.dart';
 import 'package:ecommerce/views/first_screen.dart';
 import 'package:ecommerce/views/login_choose.dart';
 import 'package:ecommerce/views/navbar/navbar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Splashscreen extends StatefulWidget {
@@ -20,7 +22,7 @@ class _SplashscreenState extends State<Splashscreen> {
 
 
 
-    
+    Provider.of<CartViewModal>(context, listen: false).getDiscount();
 
 
 
