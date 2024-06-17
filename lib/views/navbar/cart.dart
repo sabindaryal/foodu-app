@@ -1,6 +1,7 @@
 import 'package:ecommerce/resource/components/button@widgets.dart';
 import 'package:ecommerce/resource/components/textformfield@widgets.dart';
 import 'package:ecommerce/view_modal/cart_View_modal.dart';
+import 'package:ecommerce/views/place_order/select_Delivery_Addresh.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -25,8 +26,8 @@ class _CartPageState extends State<CartPage> {
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Consumer<CartViewModal>(
-          builder:
-              (BuildContext context, CartViewModal cartProvider, Widget? child) {
+          builder: (BuildContext context, CartViewModal cartProvider,
+              Widget? child) {
             return cartProvider.selectedProductInCart.isEmpty
                 ? const Center(
                     child: Text("Empty Cart"),
@@ -83,10 +84,15 @@ class _CartPageState extends State<CartPage> {
                       Text("Gross Amount: Rs ${cartProvider.totalPrice}"),
                       Text("Discount: Rs ${cartProvider.discount}"),
                       Text("Net Amount: Rs ${cartProvider.netAmount}"),
-
-
-ElevatedButtonWidget(text: 'Continue', onPressed: () {  },)
-
+                      ElevatedButtonWidget(
+                        text: 'Continue',
+                        onPressed: () {
+                          Navigator.push(context,
+                              MaterialPageRoute(builder: (context) {
+                            return const SelectDeliveryAddress();
+                          }));
+                        },
+                      )
                     ],
                   );
           },
