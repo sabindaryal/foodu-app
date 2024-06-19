@@ -1,6 +1,8 @@
 import 'dart:convert';
 
 import 'package:ecommerce/model/discount_offer_modal.dart';
+import 'package:ecommerce/model/popular_product_modal.dart';
+import 'package:ecommerce/model/selected_product_cart_model.dart';
 import 'package:ecommerce/model/slider_model.dart';
 import 'package:ecommerce/resource/components/product_widgets.dart';
 import 'package:ecommerce/resource/components/skelton/product_loading_skelton.dart';
@@ -10,6 +12,7 @@ import 'package:ecommerce/resource/components/textformfield@widgets.dart';
 import 'package:ecommerce/resource/components/title_widgets.dart';
 import 'package:ecommerce/resource/services/local_storage/session_manage.dart';
 import 'package:ecommerce/resource/services/local_storage/user_info.dart';
+import 'package:ecommerce/view_modal/cart_view_modal.dart';
 import 'package:ecommerce/view_modal/category_view_modal.dart';
 import 'package:ecommerce/view_modal/discount_offer_view_modal.dart';
 import 'package:ecommerce/view_modal/popular_view_modal.dart';
@@ -34,13 +37,6 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-
-    Provider.of<CategoryViewModal>(context, listen: false).fetchCategoryList();
-    Provider.of<SliderViewModal>(context, listen: false).fetchSliderApi();
-    Provider.of<DiscountOfferViewModal>(context, listen: false)
-        .fetchDiscountApi();
-        Provider.of<PopularProductViewModal>(context, listen: false).fetchPopularApi();
-        Provider.of<TopRatedProductViewModel>(context, listen: false).fetchTopRatedApi();
   }
 
   String profileImge = '';
@@ -110,15 +106,13 @@ class _HomePageState extends State<HomePage> {
                         icon: Icons.search,
                         keyboardType: TextInputType.name,
                         obscureText: false)),
-            
+
                 const SizedBox(
                   height: 15,
                 ),
-            
-                TitleWidgets(title: "Catogeries", onpress: (){
-                  
-                }),
-            
+
+                TitleWidgets(title: "Catogeries", onpress: () {}),
+
                 const SizedBox(
                   height: 15,
                 ),
@@ -149,13 +143,13 @@ class _HomePageState extends State<HomePage> {
                 //     )
                 //   ],
                 // ),
-            
-            TitleWidgets(title: "Special Offers", onpress: (){}),
-            
+
+                TitleWidgets(title: "Special Offers", onpress: () {}),
+
                 const SizedBox(
                   height: 10,
                 ),
-            
+
                 Card(
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
@@ -203,7 +197,7 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ),
                 ),
-               
+
                 // const Row(
                 //   children: [
                 //     Text(
@@ -224,128 +218,175 @@ class _HomePageState extends State<HomePage> {
                 //     ),
                 //   ],
                 // ),
-            
+
                 //  const ProdcutLoading(),
-            
+
                 Consumer<DiscountOfferViewModal>(
                   builder: (BuildContext context,
                       DiscountOfferViewModal discountOfferProvider,
                       Widget? child) {
                     return discountOfferProvider.isLoading
                         ? Column(
-                          children: [
-                             const SizedBox(
-                  height: 10,
-                ),
-            
-            TitleWidgets(title: "Discount Guaranteed!", onpress: (){}),
-            
-                            const ProdcutLoading(),
-                          ],
-                        )
-                        :  discountOfferProvider.discountData.isEmpty?const SizedBox(): Column(
-                          children: [
-                             const SizedBox(
-                  height: 10,
-                ),
-            
-            TitleWidgets(title: "Discount Guaranteed!", onpress: (){}),
-            
-                            SizedBox(
-
-                              height: 200,
-
-
-                              child: ListView.builder(
-                                scrollDirection: Axis.horizontal,
-                                shrinkWrap: true,
-                                  itemCount: discountOfferProvider.discountData.length,
-                                  itemBuilder: (context, index) {
-                                    return Text("${discountOfferProvider.discountData[index].name}");
-                                  }),
-                            ),
-                          ],
-                        );
+                            children: [
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              TitleWidgets(
+                                  title: "Discount Guaranteed!",
+                                  onpress: () {}),
+                              const ProdcutLoading(),
+                            ],
+                          )
+                        : discountOfferProvider.discountData.isEmpty
+                            ? const SizedBox()
+                            : Column(
+                                children: [
+                                  const SizedBox(
+                                    height: 10,
+                                  ),
+                                  TitleWidgets(
+                                      title: "Discount Guaranteed!",
+                                      onpress: () {}),
+                                  SizedBox(
+                                    height: 200,
+                                    child: ListView.builder(
+                                        scrollDirection: Axis.horizontal,
+                                        shrinkWrap: true,
+                                        itemCount: discountOfferProvider
+                                            .discountData.length,
+                                        itemBuilder: (context, index) {
+                                          return Text(
+                                              "${discountOfferProvider.discountData[index].name}");
+                                        }),
+                                  ),
+                                ],
+                              );
                   },
                 ),
-                            Consumer<PopularProductViewModal>(
+                Consumer<PopularProductViewModal>(
                   builder: (BuildContext context,
                       PopularProductViewModal popularProductProvider,
                       Widget? child) {
                     return popularProductProvider.isLoading
                         ? Column(
-                          children: [
-                             const SizedBox(
-                  height: 20,
-                ),
-            
-            TitleWidgets(title: "Popular Product", onpress: (){}),
-            
-                            const ProdcutLoading(),
-                          ],
-                        )
-                        :  popularProductProvider.popularData.isEmpty?const SizedBox(): Column(
-                          children: [
-                             const SizedBox(
-                  height: 10,
-                ),
-            
-            TitleWidgets(title: "Popular Product", onpress: (){}),
-            
-                            SizedBox(
-                              height: 300,
-                              child: ListView.builder(
-                                scrollDirection: Axis.horizontal,
-                                physics: const ScrollPhysics(),
-                                shrinkWrap: true,
-                                  itemCount: popularProductProvider.popularData.length,
-                                  itemBuilder: (context, index) {
-                                    // return Text("${popularProductProvider.popularData[index].productName}");
-                                    return ProductWidgets(productPrice:"${popularProductProvider.popularData[index].price}" , productName: "${popularProductProvider.popularData[index].productName}", productImage:"${popularProductProvider.popularData[index].image}", addToCart: (){});
-                                  }),
-                            ),
-                          ],
-                        );
+                            children: [
+                              const SizedBox(
+                                height: 20,
+                              ),
+                              TitleWidgets(
+                                  title: "Popular Product", onpress: () {}),
+                              const ProdcutLoading(),
+                            ],
+                          )
+                        : popularProductProvider.popularData.isEmpty
+                            ? const SizedBox()
+                            : Column(
+                                children: [
+                                  const SizedBox(
+                                    height: 10,
+                                  ),
+                                  TitleWidgets(
+                                      title: "Popular Product", onpress: () {}),
+                                  SizedBox(
+                                    height: 300,
+                                    child: ListView.builder(
+                                        scrollDirection: Axis.horizontal,
+                                        physics: const ScrollPhysics(),
+                                        shrinkWrap: true,
+                                        itemCount: popularProductProvider
+                                            .popularData.length,
+                                        itemBuilder: (context, index) {
+                                          PopularProductModal value =
+                                              popularProductProvider
+                                                  .popularData[index];
+                                          // return Text("${popularProductProvider.popularData[index].productName}");
+                                          return ProductWidgets(
+                                              productPrice:
+                                                  "${popularProductProvider.popularData[index].price}",
+                                              productName:
+                                                  "${popularProductProvider.popularData[index].productName}",
+                                              productImage:
+                                                  "${popularProductProvider.popularData[index].image}",
+                                              addToCart: () {
+                                                SelectedCartItemsModal items =
+                                                    SelectedCartItemsModal(
+                                                        id: value.productId,
+                                                        productname:
+                                                            value.productName,
+                                                        price: double.tryParse(
+                                                            value.price
+                                                                .toString()),
+                                                        qty: 1,
+                                                        initalPrice: double
+                                                            .tryParse(value
+                                                                .price
+                                                                .toString()),
+                                                        imgUrl: value.image,
+                                                        storeId: value.storeId,
+                                                        variant:
+                                                            value.totalVariants ==
+                                                                    0
+                                                                ? false
+                                                                : true);
+
+                                                Provider.of<CartViewModal>(
+                                                        context,
+                                                        listen: false)
+                                                    .addItemsInCart(items);
+                                              });
+                                        }),
+                                  ),
+                                ],
+                              );
                   },
                 ),
-                                Consumer<TopRatedProductViewModel>(
+                Consumer<TopRatedProductViewModel>(
                   builder: (BuildContext context,
                       TopRatedProductViewModel topRatedProductProvider,
                       Widget? child) {
                     return topRatedProductProvider.isLoading
                         ? Column(
-                          children: [
-                             const SizedBox(
-                  height: 20,
-                ),
-            
-            TitleWidgets(title: "Top Rated Product", onpress: (){}),
-            
-                            const ProdcutLoading(),
-                          ],
-                        )
-                        :  topRatedProductProvider.topRatedData.isEmpty?const SizedBox(): Column(
-                          children: [
-                             const SizedBox(
-                  height: 10,
-                ),
-            
-            TitleWidgets(title: "Top Rated Product", onpress: (){}),
-            
-                            SizedBox(
-                              height: 300,
-                              child: ListView.builder(
-                                scrollDirection: Axis.horizontal,
-                                physics: const ScrollPhysics(),
-                                shrinkWrap: true,
-                                  itemCount: topRatedProductProvider.topRatedData.length,
-                                  itemBuilder: (context, index) {
-                                    // return Text("${popularProductProvider.popularData[index].productName}");
-                                    return ProductWidgets(productPrice:"${topRatedProductProvider.topRatedData[index].price}" , productName: "${topRatedProductProvider.topRatedData[index].productName}", productImage:"${topRatedProductProvider.topRatedData[index].image}", addToCart: (){});
-                                  }),
-                            ),
-                          ],
-                        );
+                            children: [
+                              const SizedBox(
+                                height: 20,
+                              ),
+                              TitleWidgets(
+                                  title: "Top Rated Product", onpress: () {}),
+                              const ProdcutLoading(),
+                            ],
+                          )
+                        : topRatedProductProvider.topRatedData.isEmpty
+                            ? const SizedBox()
+                            : Column(
+                                children: [
+                                  const SizedBox(
+                                    height: 10,
+                                  ),
+                                  TitleWidgets(
+                                      title: "Top Rated Product",
+                                      onpress: () {}),
+                                  SizedBox(
+                                    height: 300,
+                                    child: ListView.builder(
+                                        scrollDirection: Axis.horizontal,
+                                        physics: const ScrollPhysics(),
+                                        shrinkWrap: true,
+                                        itemCount: topRatedProductProvider
+                                            .topRatedData.length,
+                                        itemBuilder: (context, index) {
+                                          // return Text("${popularProductProvider.popularData[index].productName}");
+                                          return ProductWidgets(
+                                              productPrice:
+                                                  "${topRatedProductProvider.topRatedData[index].price}",
+                                              productName:
+                                                  "${topRatedProductProvider.topRatedData[index].productName}",
+                                              productImage:
+                                                  "${topRatedProductProvider.topRatedData[index].image}",
+                                              addToCart: () {});
+                                        }),
+                                  ),
+                                ],
+                              );
                   },
                 )
               ],

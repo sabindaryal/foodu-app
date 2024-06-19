@@ -1,13 +1,22 @@
+import 'package:ecommerce/view_modal/category_view_modal.dart';
+import 'package:ecommerce/view_modal/discount_offer_view_modal.dart';
+import 'package:ecommerce/view_modal/popular_view_modal.dart';
+import 'package:ecommerce/view_modal/slider_view_modal.dart';
+import 'package:ecommerce/view_modal/top_rated_product_view_modal.dart';
 import 'package:ecommerce/views/navbar/cart.dart';
 import 'package:ecommerce/views/navbar/home.dart';
 import 'package:ecommerce/views/navbar/orders.dart';
 import 'package:ecommerce/views/navbar/profile.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class MyNavigationBar extends StatefulWidget {
   const MyNavigationBar({super.key});
 
   @override
+  
+
+
   _MyNavigationBarState createState() => _MyNavigationBarState();
 }
 
@@ -29,6 +38,19 @@ class _MyNavigationBarState extends State<MyNavigationBar> {
     });
   }
 
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+ Provider.of<CategoryViewModal>(context, listen: false).fetchCategoryList();
+    Provider.of<SliderViewModal>(context, listen: false).fetchSliderApi();
+    Provider.of<DiscountOfferViewModal>(context, listen: false)
+        .fetchDiscountApi();
+        Provider.of<PopularProductViewModal>(context, listen: false).fetchPopularApi();
+        Provider.of<TopRatedProductViewModel>(context, listen: false).fetchTopRatedApi();
+        
+
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
